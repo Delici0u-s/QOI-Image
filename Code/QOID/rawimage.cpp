@@ -82,6 +82,7 @@ bool RawImage::GenerateRawFile(const std::string_view Name) {
   file.seekp(bitsPerSampleOffset);
   file.write(reinterpret_cast<const char *>(bitsPerSample), sizeof(bitsPerSample));
 
+  file.flush();
   file.close();
   return true;
 }

@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main() {
-  QOID::RawImage I{500, 500};
+  QOID::RawImage I{362, 361}; // RawFile max size is total pixels of 362*362=131044, idfk why ;-;
   Timer T{};
   I.FillRegion({QOID::max, QOID::min, 10}, 0, 0, 50, 50);
   T.reset();
