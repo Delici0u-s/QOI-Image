@@ -1,9 +1,16 @@
+#include "QOID/QOID_General.hpp"
 #include "QOID/rawimage.hpp"
 
+#include "D:\progremming\.Synced\Languages\cpp\ownlibs\LearnCpp.com\Timer(chronos)\Timer.h"
+#include <iostream>
+
 int main() {
-  QOID::RawImage I{4096, 2160};
-  // QOID::RawImage I{100, 100};
+  QOID::RawImage I{500, 500};
+  Timer T{};
+  I.FillRegion({QOID::max, QOID::min, 10}, 0, 0, 50, 50);
+  T.reset();
   I.GenerateRawFile("testimage.DNG");
+  std::cout << "MakingRawFile: " << T.delapsed() << '\n';
 
   return 0;
 }

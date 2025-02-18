@@ -1,21 +1,21 @@
 #pragma once
+#include "QOID_General.hpp"
 #include "pixel.hpp"
+#include <cstring>
 #include <stdexcept>
 #include <vector>
 
 namespace QOID {
-// unsigned int
-using ui = unsigned int;
-
 // Raw image, Has array of Pixels
 class RawImage {
 public:
-  RawImage() = default;
+  RawImage() = delete;
   RawImage(const ui X, const ui Y) : size_x{X}, size_y{Y}, Data(X * Y) {}
 
   inline void SetPixel(const Pixel &P, const ui X, const ui Y) {
     if (X >= size_x || Y >= size_y) throw std::out_of_range("Pixel coordinates out of bounds");
-    Data[X + Y * size_x] = P;
+    std::memcpy(&Data[X + Y * size_x], &P, sizeof(P));
+    // Data[X + Y * size_x] = P;
   }
 
   inline Pixel &GetPixel(const ui X, const ui Y) {
@@ -57,10 +57,20 @@ public:
   //    runtime_error;
   bool GenerateRawFile(const std::string_view Name);
 
+  // may throw out_of_range or invalid_argument exception
+  void FillRegion(const Pixel &P, const ui x1, const ui y1, const ui x2, const ui y2);
+
 private:
   ui size_x{};
   ui size_y{};
   std::vector<Pixel> Data;
+};
+
+struct IFDEntry {
+  uint16_t tag;
+  uint16_t type;
+  uint32_t count;
+  uint32_t value;
 };
 
 } // namespace QOID
