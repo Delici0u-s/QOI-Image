@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace QOID {
-void writeHeaderDNG(std::ofstream &file, const uint32_t offset) {
+void writeHeaderTiff(std::ofstream &file, const uint32_t offset) {
   // offset is relative to file beginning. First byte of file has offset 0
   static std::vector<std::byte> buffer(8);
 
@@ -33,7 +33,7 @@ void writeHeaderDNG(std::ofstream &file, const uint32_t offset) {
 
 void writeIFD(std::ofstream &file, uint32_t imageWidth, uint32_t imageHeight, uint32_t stripOffset,
               uint32_t stripByteCount, uint32_t BitsPerSampleOffset) {
-  constexpr uint16_t numEntries = 8; // Number of IFD tags
+  constexpr uint16_t numEntries = 9; // Number of IFD tags
 
   IFDEntry entries[] = {
       {256, 4, 1, imageWidth},          // ImageWidth (LONG)
@@ -42,9 +42,11 @@ void writeIFD(std::ofstream &file, uint32_t imageWidth, uint32_t imageHeight, ui
       {259, 3, 1, 1},                   // Compression (1 = None)
       {262, 3, 1, 2},                   // PhotometricInterpretation (2 = RGB)
       {273, 4, 1, stripOffset},         // StripOffsets
-      {279, 4, 1, stripByteCount},      // StripByteCounts
       {277, 3, 1, 4},                   // SamplesPerPixel (RGBA)
+      {279, 4, 1, stripByteCount},      // StripByteCounts
+      {338, 3, 1, 1},                   // ExtraSamples (1 = Unassociated alpha)
   };
+
   file.write(reinterpret_cast<const char *>(&numEntries), sizeof(numEntries));
   file.write(reinterpret_cast<const char *>(entries), sizeof(entries));
   uint32_t nextIFDOffset = 0; // No more IFDs
@@ -52,14 +54,14 @@ void writeIFD(std::ofstream &file, uint32_t imageWidth, uint32_t imageHeight, ui
 }
 
 bool RawImage::GenerateRawFile(const std::string_view Name) {
-  if (!Name.ends_with(".DNG")) throw std::invalid_argument{"Not a .DNG file"};
+  if (!Name.ends_with(".tiff")) throw std::invalid_argument{"Not a .tiff file"};
   std::ofstream file{Name.data(), std::ios::binary | std::ios::out};
   if (!file.is_open()) throw std::runtime_error{"file couldn't be opened"};
 
   static constexpr uint32_t headerSize{8};
   static uint32_t imageSize = size_x * size_y * sizeof(Pixel);
   // write header
-  QOID::writeHeaderDNG(file, headerSize + imageSize);
+  QOID::writeHeaderTiff(file, headerSize + imageSize);
 
   // buffer of each row of data.
   constexpr size_t chunkSize = 4096; // 4KB chunk size
@@ -74,8 +76,8 @@ bool RawImage::GenerateRawFile(const std::string_view Name) {
     file.write(reinterpret_cast<const char *>(buffer.data()), buffer.size() * sizeof(Pixel));
   }
 
-  uint16_t bitsPerSample[4] = {8, 8, 8, 8}; // RGBA, 8 bits per channel
-  uint32_t bitsPerSampleOffset = headerSize + imageSize + sizeof(IFDEntry) * 8 + sizeof(uint16_t);
+  static constexpr uint16_t bitsPerSample[4] = {8, 8, 8, 8}; // RGBA, 8 bits per channel
+  uint32_t bitsPerSampleOffset = headerSize + imageSize + sizeof(IFDEntry) * 9 + sizeof(uint16_t);
 
   file.seekp(headerSize + imageSize);
   writeIFD(file, size_x, size_y, headerSize, imageSize, bitsPerSampleOffset);

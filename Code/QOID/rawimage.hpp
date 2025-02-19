@@ -51,7 +51,7 @@ public:
   ui GetWidth() const { return size_x; }
   ui GetHeight() const { return size_y; }
 
-  // Name input requres a .DNG extension
+  // Name input requres a .tiff extension
   // May throw exceptions:
   //    invalid_argument;
   //    runtime_error;
