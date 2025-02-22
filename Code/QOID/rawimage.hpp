@@ -2,6 +2,7 @@
 #include "QOID_General.hpp"
 #include "pixel.hpp"
 #include <cstring>
+#include <filesystem>
 #include <stdexcept>
 #include <vector>
 
@@ -51,14 +52,16 @@ public:
   ui GetWidth() const { return size_x; }
   ui GetHeight() const { return size_y; }
 
-  // Name input requres a .tiff extension
-  // May throw exceptions:
-  //    invalid_argument;
-  //    runtime_error;
-  bool GenerateRawFile(const std::string_view Name);
-
   // may throw out_of_range or invalid_argument exception
   void FillRegion(const Pixel &P, const ui x1, const ui y1, const ui x2, const ui y2);
+
+  enum class ImageType {
+    tiff = 0,
+    qoi,
+  };
+
+  bool GenerateFile(const ImageType Type, const strv FileName,
+                    const std::filesystem::path Location = std::filesystem::current_path());
 
 private:
   ui size_x{};
