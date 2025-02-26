@@ -1,8 +1,7 @@
 #pragma once
 #include "../../QOID_General.hpp"
-#include "../../image.hpp"
 #include "../pixel.hpp"
-#include "src/QOID/QOID_General.hpp"
+#include "../../image.hpp"
 #include <array>
 #include <bit>
 #include <cstddef>
@@ -11,17 +10,12 @@
 #include <fstream>
 #include <ios>
 #include <map>
+#include <vector>
 
 namespace QOID {
 namespace qoi {
 
-enum class Opcodes {
-  index = 0,
-  diff,
-  LUMA,
-  RUN,
-  New,
-};
+enum class Opcodes { index = 0, diff, LUMA, RUN, New };
 
 static inline bool writeTrail(std::ostream &file) {
 #if defined(BIG_ENDIAN)

@@ -67,8 +67,8 @@ inline Pixel &Image::GetPixel(const ui width, const ui height) {
 inline Pixel &Image::fGetPixel(const ui width, const ui height) { return m_pixel_data[width + height * m_width]; }
 } // namespace QOID
 
-#include "DataTypes/ImageFunctions/tiff.hpp"
 #include "DataTypes/ImageFunctions/qoi.hpp"
+#include "DataTypes/ImageFunctions/tiff.hpp"
 
 namespace QOID {
 inline bool Image::GenerateFile(const ImageType Type, const strv FilePath) {
