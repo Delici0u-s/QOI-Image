@@ -37,9 +37,6 @@ public:
   constexpr ui getWidth() const { return m_width; }
   constexpr ui getHeight() const { return m_height; }
 
-  constexpr const ui *getWidthR() const { return &m_width; }
-  constexpr const ui *getHeightR() const { return &m_height; }
-
   // Filepath can be realtive to cwd or absolute
   bool GenerateFile(const ImageType Type, const strv FilePath);
 
@@ -65,12 +62,25 @@ inline Pixel &Image::GetPixel(const ui width, const ui height) {
 }
 
 inline Pixel &Image::fGetPixel(const ui width, const ui height) { return m_pixel_data[width + height * m_width]; }
-} // namespace QOID
+// } // namespace QOID
 
-#include "DataTypes/ImageFunctions/qoi.hpp"
-#include "DataTypes/ImageFunctions/tiff.hpp"
+// #include "DataTypes/ImageFunctions/qoi.hpp"
+// #include "DataTypes/ImageFunctions/tiff.hpp"
+// namespace QOID {
+// namespace qoi {
+// bool GenerateFile(const Image &image, const strv FilePath); // Declare the function
+// }
+// } // namespace QOID
 
-namespace QOID {
+// namespace QOID {
+
+namespace qoi { // forward declare the function
+bool GenerateFile(const Image &image, const strv FilePath);
+}
+namespace tiff { // forward declare the function
+bool GenerateFile(const Image &image, const strv FilePath);
+}
+
 inline bool Image::GenerateFile(const ImageType Type, const strv FilePath) {
   if (FilePath.empty()) throw std::invalid_argument("Filename is empty");
 
