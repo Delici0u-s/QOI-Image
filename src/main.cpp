@@ -12,11 +12,11 @@ int main() {
   //   for (QOID::ui j = 0; j < I.getHeight(); ++j)
   //     I.SetPixel({static_cast<uint8_t>(i % 256), static_cast<uint8_t>(j % 256), 128, 255}, i, j);
 
-  I.Fill({QOID::min, QOID::min, QOID::max, QOID::max});
-  // set upper right quadrant yellow
-  for (QOID::ui i{0}; i < I.getWidth() / 2; ++i)
-    for (QOID::ui j{0}; j < I.getHeight() / 2; ++j)
-      I.SetPixel({255, 255, 0}, i, j);
+  // I.Fill({QOID::min, QOID::min, QOID::max, QOID::max});
+  // // set upper right quadrant yellow
+  // for (QOID::ui i{0}; i < I.getWidth() / 2; ++i)
+  //   for (QOID::ui j{0}; j < I.getHeight() / 2; ++j)
+  //     I.SetPixel({255, 255, 0}, i, j);
 
   // I.Fill({0, 0, 0, 255}); // Clear image to black (or any base color)
   // for (QOID::ui i = 0; i < I.getWidth(); ++i) {
