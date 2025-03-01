@@ -25,9 +25,9 @@ inline color max{255};
 
 // imagetypes supported by image class
 enum class ImageType {
-  // Will be saved in raw format (IFD: compression 1)
-  tiff = 0,
   // Will be saved according to QOI specification - 26.02.2025
-  qoi,
+  qoi = 0,
+  // TGA is a lot faster, but its raw data, so a lot more space taken up in storage
+  tga,
 };
 } // namespace QOID

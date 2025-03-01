@@ -17,7 +17,9 @@ cpp_compiler_args = [
   '-Wall', 
   '-Wextra',
   '-pedantic',
-  '-O2',
+  '-O0',
+  '-ggdb',
+  '-fno-omit-frame-pointer', # Keep function frames for profiling
   # '-Ofast',
   # '-Os',
   # '-Oz', '-s'

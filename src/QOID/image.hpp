@@ -38,7 +38,7 @@ public:
   constexpr ui getHeight() const { return m_height; }
 
   // Filepath can be realtive to cwd or absolute
-  bool GenerateFile(const ImageType Type, const strv FilePath);
+  bool GenerateFile(const strv FilePath, const ImageType Type = QOID::ImageType::qoi);
 
 private:
   ui m_width{};
@@ -77,17 +77,19 @@ inline Pixel &Image::fGetPixel(const ui width, const ui height) { return m_pixel
 namespace qoi { // forward declare the function
 bool GenerateFile(const Image &image, const strv FilePath);
 }
-namespace tiff { // forward declare the function
+namespace tga { // forward declare the function
 bool GenerateFile(const Image &image, const strv FilePath);
 }
 
-inline bool Image::GenerateFile(const ImageType Type, const strv FilePath) {
+inline bool Image::GenerateFile(const strv FilePath, const ImageType Type) {
   if (FilePath.empty()) throw std::invalid_argument("Filename is empty");
 
   switch (Type) {
-  case ImageType::tiff: return tiff::GenerateFile(*this, FilePath);
   case ImageType::qoi: return qoi::GenerateFile(*this, FilePath);
+  case ImageType::tga: return tga::GenerateFile(*this, FilePath);
   default: return false;
   }
 }
 } // namespace QOID
+#include "DataTypes/ImageFunctions/qoi.hpp"
+#include "DataTypes/ImageFunctions/TGA.hpp"

@@ -37,16 +37,16 @@ static inline bool writeHeader(std::ostream &file, const Image &image) {
 
   // write Width and height according to endian
 #if defined(BIG_ENDIAN)
+  const uint32_t swappedWidth = (image.getWidth());
+  const uint32_t swappedHeight = (image.getHeight());
   static constexpr uint16_t combined{channels << 8 | colorspace};
-  std::memcpy(buffer.data() + 4, image.getWidthR(), sizeof(image.getWidth()));
-  std::memcpy(buffer.data() + 8, image.getHeightR(), sizeof(image.getHeight()));
 #else
   static constexpr uint16_t combined{colorspace << 8 | channels};
   const uint32_t swappedWidth = std::byteswap(image.getWidth());
   const uint32_t swappedHeight = std::byteswap(image.getHeight());
+#endif
   std::memcpy(buffer.data() + 4, &swappedWidth, sizeof(swappedWidth));
   std::memcpy(buffer.data() + 8, &swappedHeight, sizeof(swappedHeight));
-#endif
 
   // Write the combined channels/colorspace value
   std::memcpy(buffer.data() + 12, &combined, sizeof(combined));
@@ -55,7 +55,6 @@ static inline bool writeHeader(std::ostream &file, const Image &image) {
 }
 
 namespace {
-enum class Opcodes { index = 0, diff, LUMA, RUN, New };
 
 static inline bool writeDataNonCompressedNonOptimized(std::ostream &file, const Image &image) {
   static uint8_t tmp{0xFF};
